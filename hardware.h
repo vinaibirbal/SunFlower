@@ -1,0 +1,35 @@
+#include <Arduino.h>
+
+/*
+ *    Motor Driver 1: Controls the two motors
+ *    @param  MD1_IN1 D44 (use ENA pin on shield)
+ *    @param  MD1_IN2 D47
+ *    @param  MD1_IN3 D46 (use ENB pin on shield)
+ *    @param  MD1_IN4 D41
+ *     
+ *    IN1 IN2 GND VCC IN3 IN4
+ *    44  7           46  45
+ *    
+ */
+
+#define MD_IN1        44 
+#define MD_IN2        7 //Or use 7 (PWM)
+#define MD_IN3        46
+#define MD_IN4        45 //Or use 45 (PWM)
+
+#define forward_trig  12
+#define forward_echo  13
+#define back_trig     10
+#define back_echo     11
+
+#define ir_forward    23
+#define ir_back       25
+
+#define LDR1_OUT      A0
+#define LDR2_OUT      A1
+#define LDR3_OUT      A2
+#define LDR4_OUT      A3
+
+#define PUMP          22
+#define water_trig    8
+#define water_echo    9
