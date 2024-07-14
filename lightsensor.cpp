@@ -1,19 +1,18 @@
 #include "Arduino.h"
+#include "../hardware.h"
 #include "lightsensor.h"
-#include "hardware.h"
 
 void LDRS::readLightSensors()
 {
-    LDR[F_LEFT] = getLightLevel(analogRead(LDR1_OUT));
-    LDR[F_RIGHT] = getLightLevel(analogRead(LDR2_OUT));
-    LDR[B_LEFT] = getLightLevel(analogRead(LDR3_OUT));
-    LDR[B_RIGHT] = getLightLevel(analogRead(LDR4_OUT));
+    LDR[FRONT] = getLightLevel(analogRead(LDR1_OUT));
+    LDR[BACK] = getLightLevel(analogRead(LDR2_OUT));
+    LDR[LEFT] = getLightLevel(analogRead(LDR3_OUT));
+    LDR[RIGHT] = getLightLevel(analogRead(LDR4_OUT));
 }
 
 LEVEL LDRS::getLightLevel(int ldr_value)
 {
     LEVEL light_level;
-    Serial.println(ldr_value);
     if (ldr_value < 20) {
         light_level = DARK;
     } else if (ldr_value < 600) {
@@ -30,32 +29,35 @@ LEVEL LDRS::getLightLevel(int ldr_value)
 
 void LDRS::setOptDirLevel()
 {
-    if(LDR[F_LEFT] == LDR[F_RIGHT] && LDR[F_RIGHT] == LDR[B_LEFT] && LDR[B_LEFT] == LDR[B_RIGHT] && LDR[B_LEFT] == LDR[B_RIGHT]) {
-        opt_dir = HALT;
-        opt_level = LDR[F_LEFT];
+    if(LDR[FRONT] == LDR[BACK] && LDR[BACK] == LDR[LEFT] && LDR[LEFT] == LDR[RIGHT]) {
+        opt_dir = CENTRE;
+        opt_level = LDR[FRONT];
         return;
     }
-
-//    Serial.println(LDR[F_RIGHT]);
-//    Serial.println(LDR[F_LEFT]);
-//    Serial.println(LDR[B_RIGHT]);
-//    Serial.println(LDR[B_LEFT]);
     
-    float front= (float(LDR[F_RIGHT])+float(LDR[F_LEFT]))/2.0;
-//    Serial.println(front);
-    float back= (float(LDR[B_RIGHT])+float(LDR[B_LEFT]))/2.0;
-//    Serial.println(back);
-
-    if(front>back){
-      opt_dir=FRONT;
+    opt_dir = FRONT;
+    opt_level = LDR[FRONT];
+    
+    if(LDR[BACK] > opt_level) {
+        opt_dir = BACK;
+        opt_level = LDR[BACK];
     }
-    else if (back>front){
-      opt_dir=BACK;
-    }
-    else
-      opt_dir=HALT;
 
-    return;
+    int equal_ctr = 0;
+    for(int i = 0; i < NUM_LDRS; i++)
+    {
+        if(i != opt_dir) {
+            if(LDR[i] == opt_level)
+            {
+                equal_ctr++;
+            }
+        }
+    }
+
+    if(equal_ctr == 2) {
+        opt_dir = CENTRE;
+        return;
+    }
 }
 
 DIR LDRS::getOptDir()
@@ -81,19 +83,21 @@ void printLightDir(DIR param)
 {
     if(param == FRONT) Serial.println("FRONT");
     else if(param == BACK) Serial.println("BACK");
-    else if(param == HALT) Serial.println("HALT");
+    else if(param == LEFT) Serial.println("LEFT");
+    else if(param == RIGHT) Serial.println("RIGHT");
+    else if(param == CENTRE) Serial.println("CENTRE");
 }
 
 void LDRS::printLightData()
 {
-    Serial.print("F_LEFT LDR = ");
-    printLightLevel(LDR[F_LEFT]);
-    Serial.print("F_RIGHT LDR = ");
-    printLightLevel(LDR[F_RIGHT]);
-    Serial.print("B_Left LDR = ");
-    printLightLevel(LDR[B_LEFT]);
-    Serial.print("B_Right LDR = ");
-    printLightLevel(LDR[B_RIGHT]);
+    Serial.print("Front LDR = ");
+    printLightLevel(LDR[FRONT]);
+    Serial.print("Back LDR = ");
+    printLightLevel(LDR[BACK]);
+    Serial.print("Left LDR = ");
+    printLightLevel(LDR[LEFT]);
+    Serial.print("Right LDR = ");
+    printLightLevel(LDR[RIGHT]);
 
     Serial.print("Optimal Direction = ");
     printLightDir(opt_dir);
