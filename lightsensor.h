@@ -9,15 +9,8 @@ enum DIR
 {
   FRONT,
   BACK,
-  HALT
-};
-
-enum LDR_POS
-{
-  F_LEFT,
-  F_RIGHT,
-  B_LEFT,
-  B_RIGHT,
+  LEFT,
+  RIGHT,
   CENTRE
 };
 
