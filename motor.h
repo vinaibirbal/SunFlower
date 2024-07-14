@@ -15,8 +15,7 @@ class MOTORS {
     void haltWheels(int speed, char d);
     void moveForward(const int speed);
     void moveBackward(const int speed);
-    void remainStop();
-    //void move(int speed, bool direction)
+    void move(int speed, bool dirction)
 };
 
 #endif
