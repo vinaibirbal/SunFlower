@@ -6,11 +6,13 @@
 
 class IR{
   private:
-    bool edgeFound;
+    bool trig;
     int pin;
   public:
     void setPin(int pin);
-    bool readIrSensor();
+    void readIrSensor();
+    bool getIrTrig(int);
+    void printIrTrig()
 };
 
 #endif
