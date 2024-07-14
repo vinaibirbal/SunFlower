@@ -4,16 +4,20 @@
 #include "Arduino.h"
 
 class UltraSonic{
-  
   private:
     int distance;
+    int trig_dist;
     int trigPin;
     int echoPin;
-    bool objectFound;
+    bool trig;
 
   public:
     void setPins(int trig, int echo);
-    bool readUltraSonic();
+    void setup(int trig, int echo);
+    void readUltraSonic();
+    int getUltraSonic(int);
+    void setTrigLevel();
+    void printDistance()
 };
 
 #endif
